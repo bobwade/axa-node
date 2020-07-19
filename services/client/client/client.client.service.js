@@ -1,10 +1,14 @@
 import { OriginClientService } from '../../origin/client/origin.client.service.js';
+import { ClientPolicyService } from '../../client/policy/client.policy.service.js';
+
+import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
+import { l10n } from '../../../l10n/l10n.js'
 
 export class ClientClientService {
     static async get(req) {
         try {
             const originResponse = await this.getAll(req)
-            if(originResponse.headers['content-length'] !== '0') originResponse.body = this.paginate(JSON.parse(originResponse.body), req.query)
+            if(isJsonResponse(originResponse) && isParsableJson(originResponse)) originResponse.body = paginate(JSON.parse(originResponse.body), req.query)
             return originResponse
         } catch (err) {
             return err;
@@ -12,10 +16,15 @@ export class ClientClientService {
     }
     static async getById(req) {
         try {
-            //const id = req.params.id;
-            const originResponse = await this.getAll(req)
-            //if(originResponse.headers['content-length'] !== '0') originResponse.body = this.filterById(JSON.parse(originResponse.body), req.params.id)
-            return originResponse
+            const id = req.params.id;
+            const originClientsResponse = await this.getAll(req)
+            if(originClientsResponse.headers['content-length'] !== '0') originClientsResponse.body = this.filterById(JSON.parse(originClientsResponse.body), req.params.id)
+            if(!isJsonResponse(originClientsResponse)
+                || !isParsableJson(originClientsResponse)
+                || !originClientsResponse.some(client => client.id === id)
+            ) return ({statusCode: 404, body: l10n.client.with_id_not_found(id), headers:{}})
+            const client = JSON.parse(originClientsResponse.body).filter(client => client.id = id)[0]
+            const originPolicyResponse = await ClientPolicyService.getById(id)
         } catch (err) {
             console.log(err)
             return err;

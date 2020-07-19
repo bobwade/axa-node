@@ -1,15 +1,15 @@
-import { l10n } from '../../l10n/l10n.js';
-import { ClientLoginService } from '../../services/client/login/client.login.service.js';
+import { l10n } from '../../l10n/l10n.js'
+import { ClientLoginService } from '../../services/client/login/client.login.service.js'
 import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
 const isABadPostRequest = body => {
     return Object.keys(body).length === 2
-        && body.hasOwnProperty('username')
-        && body.hasOwnProperty('password')
+        && Object.prototype.hasOwnProperty.call(body, 'username')
+        && Object.prototype.hasOwnProperty.call(body, 'password')
         && typeof body.username === 'string'
         && typeof body.password === 'string'
-    ? false
-    : true
+        ? false
+        : true
 }
 
 const respondToBadRequest = (res) => {
@@ -27,9 +27,9 @@ const handleOriginResponse = (res, originResponse) => {
     res.status(200)
         .set({'Content-Type': 'application/json'})
         .end(JSON.stringify({
-            "token": body.token,
-            "type": body.type,
-            "expires": 0
+            'token': body.token,
+            'type': body.type,
+            'expires': 0
         }))
 }
 
@@ -40,7 +40,7 @@ const post = async (req, res) => {
         console.log(originResponse)
         return handleOriginResponse(res, originResponse)
     } catch (err) {
-        res.locals.originError = err;
+        res.locals.originError = err
         return OriginHttpError(res)
     }
 }

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "mocha --experimental-modules ./**/*.test.mjs",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint": "./node_modules/.bin/eslint \"**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,8 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.5.0",
     "mocha": "^8.0.1"
   }
 }

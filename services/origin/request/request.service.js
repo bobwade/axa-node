@@ -1,18 +1,18 @@
-import { request } from 'https';
+import { request } from 'https'
 
 export class Request {
     requestOptions = {};
     validCodes;
     constructor(options) {
-        this.requestOptions.method = options.method;
-        this.requestOptions.path = options.path;
-        this.requestOptions.host = options.host;
-        if (options.headers) this.requestOptions.headers = options.headers;
-        this.options = options;
-        this.responseBody = '';
+        this.requestOptions.method = options.method
+        this.requestOptions.path = options.path
+        this.requestOptions.host = options.host
+        if (options.headers) this.requestOptions.headers = options.headers
+        this.options = options
+        this.responseBody = ''
     }
     cacheResponseBody(chunk) {
-        this.responseBody += chunk.toString();
+        this.responseBody += chunk.toString()
     }
     send(requestBody) {
         return new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ import { l10n } from '../l10n/l10n.js'
 import { ErrorResponse } from '../controllers/error-response/error-response.js'
 
 export const hasNoAuthorisationHeader = (headers) => {
-    return headers.hasOwnProperty('authorization')
+    return Object.prototype.hasOwnProperty.call(headers, 'authorization')
         && typeof headers['authorization'] === 'string'
         ? false
         : true

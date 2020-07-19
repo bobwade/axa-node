@@ -4,8 +4,8 @@ const makeRequestOptions = (method, path, headers) => {
         host : 'dare-nodejs-assessment.herokuapp.com',
         path: `/api/${path}`
     }
-    if (headers) options.headers = headers;
-    return options;
+    if (headers) options.headers = headers
+    return options
 }
 
 

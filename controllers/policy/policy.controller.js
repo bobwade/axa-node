@@ -21,31 +21,31 @@ const handleNotChanged = (res, originResponse) => {
 
 const handleOriginResponse = (res, originResponse) => {
     switch (originResponse.statusCode) {
-        case 200 :
-            return handleSuccess(res, originResponse);
-        case 304 :
-            return handleNotChanged(res, originResponse)
-        default :
-            return handleError(res, originResponse)
+    case 200 :
+        return handleSuccess(res, originResponse)
+    case 304 :
+        return handleNotChanged(res, originResponse)
+    default :
+        return handleError(res, originResponse)
     }
 }
 
-export const get = async (req, res, next) => {
+export const get = async (req, res) => {
     try {
         const originResponse = await ClientPolicyService.get(req) 
         return handleOriginResponse(res, originResponse)
     } catch (err) {
-        res.locals.originError = err;
+        res.locals.originError = err
         return OriginHttpError(res)
     }
 }
 
-export const getByID = async (req, res, next) => {
+export const getByID = async (req, res) => {
     try {
         const originResponse = await ClientPolicyService.getById(req) 
         return handleOriginResponse(res, originResponse)
     } catch (err) {
-        res.locals.originError = err;
+        res.locals.originError = err
         return OriginHttpError(res)
     }
 }

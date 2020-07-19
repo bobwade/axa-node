@@ -1,4 +1,4 @@
-import { isJsonResponse } from './utils.js'
+import { isJsonResponse, isParsableJson } from './utils.js'
 import assert from 'assert';
 
 describe('Client Service utilities tests', () => {
@@ -7,5 +7,9 @@ describe('Client Service utilities tests', () => {
             'content-type': 'application/json'
         }
         assert.strictEqual(isJsonResponse({ headers }), true)
+    })
+    it('JSON check should detect parsableJson', () => {
+        const body = ''
+        assert.strictEqual(isParsableJson({ body }), false)
     })
 })

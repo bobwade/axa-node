@@ -1,10 +1,10 @@
-import express from 'express';
+import express from 'express'
 import { authorise } from '../guards/auth.guard.js'
 import { get } from '../controllers/client/client.controller.js'
 
-const { Router } = express;
+const { Router } = express
 
-const ClientRoutes = Router();
+const ClientRoutes = Router()
 
 ClientRoutes.get('/', authorise, get)
 ClientRoutes.get('/:id', /*client with id details*/)
