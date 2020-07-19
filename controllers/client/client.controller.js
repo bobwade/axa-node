@@ -1,17 +1,41 @@
-/*import { l10n } from '../../l10n.js';
+/*import { l10n } from '../../l10n/l10n.js';*/
 import { ClientClientService } from '../../services/client/client/client.client.service.js';
-import { OriginHttpError } from '../../services/client/index.js'
+import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
+const handleSuccess = (res, originResponse) => {
+    res.status(200)
+        .set({'Content-Type': 'application/json'})
+        .set({'ETag': originResponse.headers.etag})
+        .end(JSON.stringify(originResponse.body))
+}
 
+const handleError = (res, originResponse) => {
+    const err = new ErrorResponse(originResponse.statusCode, originResponse.message)
+    return err.send(res)
+}
 
+const handleNotChanged = (res, originResponse) => {
+    res.status(304)
+        .set({'ETag': originResponse.headers.etag})
+        .end()
+}
 
-const get = async (req, res) => {
-    try {
-        const originResponse = await ClientClientService.get(req) 
-        return handleOriginResponse(req, res, originResponse)
-    } catch (err) {
-        res.locals.originError = err;
-        return OriginHttpError(req, res)
+const handleOriginResponse = (res, originResponse) => {
+    switch (originResponse.statusCode) {
+        case 200 :
+            return handleSuccess(res, originResponse);
+        case 304 :
+            return handleNotChanged(res, originResponse)
+        default :
+            return handleError(res, originResponse)
     }
 }
 
-export { get }*/
+export const get = async (req, res, next) => {
+    try {
+        const originResponse = await ClientClientService.get(req) 
+        return handleOriginResponse(res, originResponse)
+    } catch (err) {
+        res.locals.originError = err;
+        return OriginHttpError(res)
+    }
+}

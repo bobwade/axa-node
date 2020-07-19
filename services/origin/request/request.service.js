@@ -25,7 +25,6 @@ export class Request {
                 }))
             })
             this.request.on('error', err => reject({message: err}))
-            if (requestBody) console.log(requestBody)
             this.requestOptions.method === 'POST' ? this.request.end(JSON.stringify(requestBody)) : this.request.end()
         })
     }

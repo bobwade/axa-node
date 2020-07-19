@@ -1,23 +1,53 @@
 import { ClientPolicyService } from '../../services/client/policy/client.policy.service.js'
-import { OriginHttpError } from '../../services/client/index.js'
+import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
-const handleOriginResponse = (req, res, originResponse) => {
+const handleSuccess = (res, originResponse) => {
     res.status(200)
-        .end(JSON.stringify(originResponse))
+        .set({'Content-Type': 'application/json'})
+        .set({'ETag': originResponse.headers.etag})
+        .end(JSON.stringify(originResponse.body))
+}
+
+const handleError = (res, originResponse) => {
+    const err = new ErrorResponse(originResponse.statusCode, originResponse.message)
+    return err.send(res)
+}
+
+const handleNotChanged = (res, originResponse) => {
+    res.status(304)
+        .set({'ETag': originResponse.headers.etag})
+        .end()
+}
+
+const handleOriginResponse = (res, originResponse) => {
+    switch (originResponse.statusCode) {
+        case 200 :
+            return handleSuccess(res, originResponse);
+        case 304 :
+            return handleNotChanged(res, originResponse)
+        default :
+            return handleError(res, originResponse)
+    }
 }
 
 export const get = async (req, res, next) => {
     try {
         const originResponse = await ClientPolicyService.get(req) 
-        return handleOriginResponse(req, res, originResponse)
+        return handleOriginResponse(res, originResponse)
     } catch (err) {
         res.locals.originError = err;
-        return OriginHttpError(req, res)
+        return OriginHttpError(res)
     }
 }
 
 export const getByID = async (req, res, next) => {
-    
+    try {
+        const originResponse = await ClientPolicyService.getById(req) 
+        return handleOriginResponse(res, originResponse)
+    } catch (err) {
+        res.locals.originError = err;
+        return OriginHttpError(res)
+    }
 }
 
 

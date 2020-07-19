@@ -1,19 +1,23 @@
-import { l10n } from '../l10n.js'
-const hasAuthorisationHeader = (headers) => {
+import { l10n } from '../l10n/l10n.js'
+import { ErrorResponse } from '../controllers/error-response/error-response.js'
+
+export const hasNoAuthorisationHeader = (headers) => {
     return headers.hasOwnProperty('authorization')
         && typeof headers['authorization'] === 'string'
-        ? true
-        : false
+        ? false
+        : true
 }
-const handleNoAuthorisationHeader = (req, res) => {
-    res.status(401)
-        .set({'Content-Type': 'application/json'})
-        .end(JSON.stringify({
-            "code": 0,
-            "message": l10n.noAuthorisationHeader
-        }))
+export const hasMalformedAuthorisationHeader = (headers) => {
+    return !/^Bearer .+/.test(headers.authorization)
 }
+
+const handleNoAuthorisationHeader = (res) => {
+    const errorResponse = new ErrorResponse(401, l10n.noAuthorisationHeader)
+    errorResponse.send(res)
+}
+
 export const authorise = (req, res, next) => {
-    if(!hasAuthorisationHeader(req.headers)) return handleNoAuthorisationHeader(req, res)
+    if(hasNoAuthorisationHeader(req.headers)
+    || hasMalformedAuthorisationHeader(req.headers)) return handleNoAuthorisationHeader(res)
     next()
 }

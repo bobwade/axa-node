@@ -1,7 +1,6 @@
-import { l10n } from '../../l10n.js';
+import { l10n } from '../../l10n/l10n.js';
 import { ClientLoginService } from '../../services/client/login/client.login.service.js';
-
-import { OriginHttpError } from '../../services/client/index.js'
+import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
 const isABadPostRequest = body => {
     return Object.keys(body).length === 2
@@ -13,25 +12,17 @@ const isABadPostRequest = body => {
     : true
 }
 
-const respondToBadRequest = (req, res) => {
-    res.status(400)
-        .set({'Content-Type': 'application/json'})
-        .end(JSON.stringify({
-            "code": 0,
-            "message": l10n.login.badRequest
-        }))
+const respondToBadRequest = (res) => {
+    const errorResponse = new ErrorResponse(400, l10n.login.badRequest)
+    return errorResponse.send(res)
 }
-const respondToUnauthorisedRequest = (req, res) => {
-    res.status(502)
-        .set({'Content-Type': 'application/json'})
-        .end(JSON.stringify({
-            "code": 0,
-            "message": l10n.login.unauthorised
-        }))
+const respondToUnauthorisedRequest = (res) => {
+    const errorResponse = new ErrorResponse(502, l10n.login.unauthorised)
+    return errorResponse.send(res)
 }
 
-const handleOriginResponse = (req, res, originResponse) => {
-    if (originResponse.statusCode !== 200) return respondToUnauthorisedRequest(req, res)
+const handleOriginResponse = (res, originResponse) => {
+    if (originResponse.statusCode !== 200) return respondToUnauthorisedRequest(res)
     const body = JSON.parse(originResponse.body)
     res.status(200)
         .set({'Content-Type': 'application/json'})
@@ -43,13 +34,14 @@ const handleOriginResponse = (req, res, originResponse) => {
 }
 
 const post = async (req, res) => {
-    if(isABadPostRequest(req.body)) return respondToBadRequest(req, res)
+    if(isABadPostRequest(req.body)) return respondToBadRequest(res)
     try {
-        const originResponse = await ClientLoginService.login(req.body) 
-        return handleOriginResponse(req, res, originResponse)
+        const originResponse = await ClientLoginService.login(req.body)
+        console.log(originResponse)
+        return handleOriginResponse(res, originResponse)
     } catch (err) {
         res.locals.originError = err;
-        return OriginHttpError(req, res)
+        return OriginHttpError(res)
     }
 }
 
