@@ -13,6 +13,7 @@ export const isParsableJson = (response) => {
         JSON.parse(response.body)
         return true
     } catch (err) {
+        console.log(err)
         return false
     }
 }

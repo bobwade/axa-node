@@ -1,5 +1,5 @@
-import { OriginClientService } from '../../origin/client/origin.client.service.js';
-import { ClientPolicyService } from '../../client/policy/client.policy.service.js';
+import { OriginClientService } from '../../origin/client/origin.client.service.js'
+import { ClientPolicyService } from '../../client/policy/client.policy.service.js'
 
 import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
 import { l10n } from '../../../l10n/l10n.js'
@@ -11,23 +11,31 @@ export class ClientClientService {
             if(isJsonResponse(originResponse) && isParsableJson(originResponse)) originResponse.body = paginate(JSON.parse(originResponse.body), req.query)
             return originResponse
         } catch (err) {
-            return err;
+            return err
         }
     }
-    static async getById(req) {
+    static clientWithId(clientsResponse, id) {
+        console.log(clientsResponse.body)
+        return (!isJsonResponse(clientsResponse)
+        || !isParsableJson(clientsResponse)
+        || !(JSON.parse(clientsResponse.body).some(client => client.id === id)))
+            ? false
+            : JSON.parse(clientsResponse.body).filter(client => client.id === id)[0]
+    }
+    static async getByID(req) {
         try {
-            const id = req.params.id;
-            const originClientsResponse = await this.getAll(req)
-            if(originClientsResponse.headers['content-length'] !== '0') originClientsResponse.body = this.filterById(JSON.parse(originClientsResponse.body), req.params.id)
-            if(!isJsonResponse(originClientsResponse)
-                || !isParsableJson(originClientsResponse)
-                || !originClientsResponse.some(client => client.id === id)
-            ) return ({statusCode: 404, body: l10n.client.with_id_not_found(id), headers:{}})
-            const client = JSON.parse(originClientsResponse.body).filter(client => client.id = id)[0]
-            const originPolicyResponse = await ClientPolicyService.getById(id)
+            const id = req.params.id
+            const originResponse = await this.getAll(req)
+            const client = this.clientWithId(originResponse, id)
+            if (!client) return ({statusCode: 404, body: l10n.client.with_id_not_found(id), headers:{}})
+            originResponse.body = client
+            const originPolicyResponse = await ClientPolicyService.getById(req)
+            console.log(originPolicyResponse)
+            originResponse.body.policies = originPolicyResponse.body
+            return originResponse
         } catch (err) {
             console.log(err)
-            return err;
+            return err
         }
     }
     static async getAll(req) {
@@ -38,7 +46,7 @@ export class ClientClientService {
             return originResponse
         } catch (err) {
             console.log(err)
-            return err;
+            return err
         }
     }
 }

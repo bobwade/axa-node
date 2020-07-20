@@ -3,6 +3,11 @@ import { makeRequestOptions } from '../index.js'
 
 export class OriginLoginService {
     static endpoint = 'login';
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} secret 
+     */
     static post(id, secret) {
         const request = new Request(makeRequestOptions('POST', this.endpoint, {'content-type': 'application/json'}))
         return request.send({

@@ -2,6 +2,10 @@ import { l10n } from '../../l10n/l10n.js'
 import { ClientLoginService } from '../../services/client/login/client.login.service.js'
 import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
+/**
+ * 
+ * @param {ClientLogin} body 
+ */
 const isABadPostRequest = body => {
     return Object.keys(body).length === 2
         && Object.prototype.hasOwnProperty.call(body, 'username')
@@ -11,16 +15,27 @@ const isABadPostRequest = body => {
         ? false
         : true
 }
-
+/**
+ * 
+ * @param {import('express').Response} res 
+ */
 const respondToBadRequest = (res) => {
     const errorResponse = new ErrorResponse(400, l10n.login.badRequest)
     return errorResponse.send(res)
 }
+/**
+ * 
+ * @param {import('express').Response} res 
+ */
 const respondToUnauthorisedRequest = (res) => {
     const errorResponse = new ErrorResponse(502, l10n.login.unauthorised)
     return errorResponse.send(res)
 }
-
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {*} originResponse 
+ */
 const handleOriginResponse = (res, originResponse) => {
     if (originResponse.statusCode !== 200) return respondToUnauthorisedRequest(res)
     const body = JSON.parse(originResponse.body)
@@ -32,7 +47,11 @@ const handleOriginResponse = (res, originResponse) => {
             'expires': 0
         }))
 }
-
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
 const post = async (req, res) => {
     if(isABadPostRequest(req.body)) return respondToBadRequest(res)
     try {

@@ -1,6 +1,9 @@
 import { request } from 'https'
 
 export class Request {
+    /**
+     * @type {import('http').RequestOptions}
+     */
     requestOptions = {};
     validCodes;
     constructor(options) {
@@ -14,6 +17,11 @@ export class Request {
     cacheResponseBody(chunk) {
         this.responseBody += chunk.toString()
     }
+    /**
+     * 
+     * @param {(string|undefined)} requestBody
+     * @returns {Promise<OriginResponse|OriginHttpError>}
+     */
     send(requestBody) {
         return new Promise((resolve, reject) => {
             this.request = request(this.requestOptions, (incomingMessage) => {

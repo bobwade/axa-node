@@ -3,6 +3,7 @@ import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
 
 export class ClientPolicyService {
     static filterById(policies, id) {
+        console.log(policies, id)
         if (!policies.length || typeof policies !== 'object') return policies
         return policies.filter(policy => policy.id === id)
     }
@@ -10,7 +11,6 @@ export class ClientPolicyService {
     static async get(req) {
         try {
             const originResponse = await this.getAll(req)
-            console.log(originResponse.body)
             if(isJsonResponse(originResponse) && isParsableJson(originResponse)) originResponse.body = paginate(JSON.parse(originResponse.body), req.query)
             return originResponse
         } catch (err) {

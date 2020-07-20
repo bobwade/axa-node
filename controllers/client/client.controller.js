@@ -39,3 +39,13 @@ export const get = async (req, res) => {
         return OriginHttpError(res)
     }
 }
+
+export const getByID = async (req, res) => {
+    try {
+        const originResponse = await ClientClientService.getByID(req) 
+        return handleOriginResponse(res, originResponse)
+    } catch (err) {
+        res.locals.originError = err
+        return OriginHttpError(res)
+    }
+}
