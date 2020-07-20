@@ -2,29 +2,24 @@ import { request } from 'https'
 
 export class Request {
     /**
-     * @type {import('http').RequestOptions}
+     * @param {import("http").RequestOptions} options
      */
-    requestOptions = {};
-    validCodes;
     constructor(options) {
-        this.requestOptions.method = options.method
-        this.requestOptions.path = options.path
-        this.requestOptions.host = options.host
-        if (options.headers) this.requestOptions.headers = options.headers
         this.options = options
         this.responseBody = ''
     }
     cacheResponseBody(chunk) {
         this.responseBody += chunk.toString()
     }
+    
     /**
      * 
-     * @param {(string|undefined)} requestBody
-     * @returns {Promise<OriginResponse|OriginHttpError>}
+     * @param {*} [requestBody]
+     * @returns {Promise<OriginResponse>}
      */
     send(requestBody) {
         return new Promise((resolve, reject) => {
-            this.request = request(this.requestOptions, (incomingMessage) => {
+            this.request = request(this.options, (incomingMessage) => {
                 incomingMessage.on('data', chunk => this.cacheResponseBody(chunk))
                 incomingMessage.on('close', () => resolve({
                     statusCode: incomingMessage.statusCode,
@@ -33,7 +28,7 @@ export class Request {
                 }))
             })
             this.request.on('error', err => reject({message: err}))
-            this.requestOptions.method === 'POST' ? this.request.end(JSON.stringify(requestBody)) : this.request.end()
+            this.options.method === 'POST' ? this.request.end(JSON.stringify(requestBody)) : this.request.end()
         })
     }
 }

@@ -1,6 +1,11 @@
 import { ClientPolicyService } from '../../services/client/policy/client.policy.service.js'
 import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {OriginResponse} originResponse 
+ */
 const handleSuccess = (res, originResponse) => {
     res.status(200)
         .set({'Content-Type': 'application/json'})
@@ -8,17 +13,32 @@ const handleSuccess = (res, originResponse) => {
         .end(JSON.stringify(originResponse.body))
 }
 
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {OriginResponse} originResponse 
+ */
 const handleError = (res, originResponse) => {
-    const err = new ErrorResponse(originResponse.statusCode, originResponse.message)
+    const err = new ErrorResponse(originResponse.statusCode, originResponse.body)
     return err.send(res)
 }
 
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {OriginResponse} originResponse 
+ */
 const handleNotChanged = (res, originResponse) => {
     res.status(304)
         .set({'ETag': originResponse.headers.etag})
         .end()
 }
 
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {OriginResponse} originResponse 
+ */
 const handleOriginResponse = (res, originResponse) => {
     switch (originResponse.statusCode) {
     case 200 :
@@ -30,6 +50,11 @@ const handleOriginResponse = (res, originResponse) => {
     }
 }
 
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
 export const get = async (req, res) => {
     try {
         const originResponse = await ClientPolicyService.get(req) 
@@ -40,6 +65,11 @@ export const get = async (req, res) => {
     }
 }
 
+/**
+ * 
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
 export const getByID = async (req, res) => {
     try {
         const originResponse = await ClientPolicyService.getById(req) 

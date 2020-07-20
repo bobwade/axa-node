@@ -14,6 +14,7 @@ export class ErrorResponse {
             message: this.message
         })
     }
+
     /**
      * 
      * @param {number} code 
@@ -25,6 +26,7 @@ export class ErrorResponse {
             ? code
             : 500
     }
+
     /**
      * 
      * @param {string} message 
@@ -32,6 +34,7 @@ export class ErrorResponse {
     setMessage(message) {
         this. message = typeof message === 'string' ? message : l10n.error.fallbackErrorMessage
     }
+
     /**
      * 
      * @param {import('express').Response} res
@@ -42,6 +45,7 @@ export class ErrorResponse {
             .end(this.resBody)
     }
 }
+
 /**
  * 
  * @param {import('express').Response} res

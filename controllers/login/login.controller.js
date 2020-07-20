@@ -15,6 +15,7 @@ const isABadPostRequest = body => {
         ? false
         : true
 }
+
 /**
  * 
  * @param {import('express').Response} res 
@@ -23,6 +24,7 @@ const respondToBadRequest = (res) => {
     const errorResponse = new ErrorResponse(400, l10n.login.badRequest)
     return errorResponse.send(res)
 }
+
 /**
  * 
  * @param {import('express').Response} res 
@@ -31,10 +33,11 @@ const respondToUnauthorisedRequest = (res) => {
     const errorResponse = new ErrorResponse(502, l10n.login.unauthorised)
     return errorResponse.send(res)
 }
+
 /**
  * 
  * @param {import('express').Response} res 
- * @param {*} originResponse 
+ * @param {OriginResponse} originResponse 
  */
 const handleOriginResponse = (res, originResponse) => {
     if (originResponse.statusCode !== 200) return respondToUnauthorisedRequest(res)
@@ -47,6 +50,7 @@ const handleOriginResponse = (res, originResponse) => {
             'expires': 0
         }))
 }
+
 /**
  * 
  * @param {import('express').Request} req 

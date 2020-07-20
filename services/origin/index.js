@@ -1,3 +1,10 @@
+/**
+ * 
+ * @param {'GET'|'POST'|'PUT'|'DELETE'} method 
+ * @param {string} path 
+ * @param {import('http').IncomingHttpHeaders} headers
+ * @returns {import('http').RequestOptions}
+ */
 const makeRequestOptions = (method, path, headers) => {
     const options = {
         method,

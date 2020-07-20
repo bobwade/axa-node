@@ -2,12 +2,23 @@ import { OriginPolicyService } from '../../origin/policy/origin.policy.service.j
 import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
 
 export class ClientPolicyService {
+    /**
+     * 
+     * @param {Policy[]} policies 
+     * @param {string} id
+     * @returns {Policy[]}
+     */
     static filterById(policies, id) {
         console.log(policies, id)
         if (!policies.length || typeof policies !== 'object') return policies
         return policies.filter(policy => policy.id === id)
     }
 
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginResponse>}
+     */
     static async get(req) {
         try {
             const originResponse = await this.getAll(req)
@@ -17,6 +28,12 @@ export class ClientPolicyService {
             return err
         }
     }
+
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginResponse>}
+     */
     static async getById(req) {
         try {
             const originResponse = await this.getAll(req)
@@ -27,6 +44,12 @@ export class ClientPolicyService {
             return err
         }
     }
+    
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginResponse>}
+     */
     static async getAll(req) {
         try {
             const headers = { authorization: req.headers.authorization }

@@ -5,15 +5,23 @@ export const paginate = (responseArray, query) => {
     return responseArray.slice(startIndex, startIndex + limit)
 }
 
+/**
+ * @param {OriginResponse} response
+ * @returns {boolean}
+ */
 export const isJsonResponse = (response) => {
     return /^application\/json/.test(response.headers['content-type'])
 }
+
+/**
+ * @param {OriginResponse} response
+ * @returns {boolean}
+ */
 export const isParsableJson = (response) => {
     try {
         JSON.parse(response.body)
         return true
     } catch (err) {
-        console.log(err)
         return false
     }
 }

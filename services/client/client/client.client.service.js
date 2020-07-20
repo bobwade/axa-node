@@ -5,6 +5,11 @@ import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
 import { l10n } from '../../../l10n/l10n.js'
 
 export class ClientClientService {
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginResponse>}
+     */
     static async get(req) {
         try {
             const originResponse = await this.getAll(req)
@@ -14,6 +19,13 @@ export class ClientClientService {
             return err
         }
     }
+
+    /**
+     * 
+     * @param {OriginResponse} clientsResponse 
+     * @param {string} id
+     * @returns {(false|Client)}
+     */
     static clientWithId(clientsResponse, id) {
         console.log(clientsResponse.body)
         return (!isJsonResponse(clientsResponse)
@@ -22,10 +34,16 @@ export class ClientClientService {
             ? false
             : JSON.parse(clientsResponse.body).filter(client => client.id === id)[0]
     }
+
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginResponse>}
+     */
     static async getByID(req) {
         try {
             const id = req.params.id
-            const originResponse = await this.getAll(req)
+            const originResponse = await this.getAll(req) 
             const client = this.clientWithId(originResponse, id)
             if (!client) return ({statusCode: 404, body: l10n.client.with_id_not_found(id), headers:{}})
             originResponse.body = client
@@ -38,6 +56,12 @@ export class ClientClientService {
             return err
         }
     }
+    
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginResponse>}
+     */
     static async getAll(req) {
         try {
             const headers = { authorization: req.headers.authorization }
