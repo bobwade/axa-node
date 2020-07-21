@@ -4,29 +4,6 @@ import { ErrorResponse, OriginHttpError } from '../error-response/error-response
 
 /**
  * 
- * @param {ClientLogin} body 
- */
-const isABadPostRequest = body => {
-    return Object.keys(body).length === 2
-        && Object.prototype.hasOwnProperty.call(body, 'username')
-        && Object.prototype.hasOwnProperty.call(body, 'password')
-        && typeof body.username === 'string'
-        && typeof body.password === 'string'
-        ? false
-        : true
-}
-
-/**
- * 
- * @param {import('express').Response} res 
- */
-const respondToBadRequest = (res) => {
-    const errorResponse = new ErrorResponse(400, l10n.login.badRequest)
-    return errorResponse.send(res)
-}
-
-/**
- * 
  * @param {import('express').Response} res 
  */
 const respondToUnauthorisedRequest = (res) => {
@@ -57,7 +34,6 @@ const handleOriginResponse = (res, originResponse) => {
  * @param {import('express').Response} res 
  */
 const post = async (req, res) => {
-    if(isABadPostRequest(req.body)) return respondToBadRequest(res)
     try {
         const originResponse = await ClientLoginService.login(req.body)
         console.log(originResponse)
@@ -68,4 +44,4 @@ const post = async (req, res) => {
     }
 }
 
-export { post, respondToBadRequest, isABadPostRequest }
+export { post }
