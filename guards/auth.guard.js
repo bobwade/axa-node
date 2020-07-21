@@ -26,8 +26,9 @@ export const hasMalformedAuthorisationHeader = (headers) => {
  * 
  * @param {import('express').Response} res 
  */
-const handleNoAuthorisationHeader = (res) => {
-    const errorResponse = new ErrorResponse(401, l10n.noAuthorisationHeader)
+const handleAuthError = (res) => {
+    const errorResponse = new ErrorResponse(401, l10n.error.invalidAuthHeader)
+    res.set('WWW-Authenticate',`Bearer error="invalid_request", error_description="${l10n.error.invalidAuthHeader}"`)
     errorResponse.send(res)
 }
 
@@ -39,6 +40,6 @@ const handleNoAuthorisationHeader = (res) => {
  */
 export const authorise = (req, res, next) => {
     if(hasNoAuthorisationHeader(req.headers)
-    || hasMalformedAuthorisationHeader(req.headers)) return handleNoAuthorisationHeader(res)
+    || hasMalformedAuthorisationHeader(req.headers)) return handleAuthError(res)
     next()
 }

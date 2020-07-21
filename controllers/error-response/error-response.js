@@ -4,7 +4,7 @@ export class ErrorResponse {
     /**
      * 
      * @param {number} code 
-     * @param {string} message 
+     * @param {string} message
      */
     constructor(code, message) {
         this.setCode(code)
@@ -32,7 +32,8 @@ export class ErrorResponse {
      * @param {string} message 
      */
     setMessage(message) {
-        this. message = typeof message === 'string' ? message : l10n.error.fallbackErrorMessage
+        console.log((message))
+        this.message = typeof message === 'string' ? message : l10n.error.fallbackErrorMessage
     }
 
     /**

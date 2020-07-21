@@ -10,7 +10,9 @@ With that in mind I designed those two sides to be as decoupled as possible, so 
 * These requests are routed from 'origin services' which instantiate new requests to the desired endpoints and apply any headers needed. 
 * 'Client services' interact with the origin services and apply any transformation of the response data to prepare it to meet the contract of the user facing API.
 * Controllers route to the client services and are just responsible for applying the response http code, headers and body they recieve back.
-* Finally are the path specific routers which have guards, e.g. for ploicy/clients routes that the Authorization header is present and well formatted.
+* Finally are the path specific routers which have guards, e.g. for policy/clients routes that the Authorization header is present and well formatted.
+
+Response message not provided by the origin server are in the l10n folder, this is to keep them out of the req/res flow and have them in a centralised place in case of a need to edit or translate.
 
 ## Scripts
 

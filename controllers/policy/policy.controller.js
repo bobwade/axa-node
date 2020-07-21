@@ -1,3 +1,4 @@
+import { l10n } from '../../l10n/l10n.js';
 import { ClientPolicyService } from '../../services/client/policy/client.policy.service.js'
 import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
@@ -39,12 +40,25 @@ const handleNotChanged = (res, originResponse) => {
  * @param {import('express').Response} res 
  * @param {OriginResponse} originResponse 
  */
+const handleTokenExpired = (res, originResponse) => {
+    const err = new ErrorResponse(originResponse.statusCode, l10n.error.authExpired)
+    res.set('WWW-Authenticate',`Bearer error="invalid_token", error_description="${l10n.error.authExpired}"`)
+    return err.send(res)
+}
+
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {OriginResponse} originResponse 
+ */
 const handleOriginResponse = (res, originResponse) => {
     switch (originResponse.statusCode) {
     case 200 :
         return handleSuccess(res, originResponse)
     case 304 :
         return handleNotChanged(res, originResponse)
+    case 401 :
+        return handleTokenExpired(res, originResponse)
     default :
         return handleError(res, originResponse)
     }
