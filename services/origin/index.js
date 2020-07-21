@@ -5,7 +5,7 @@
  * @param {import('http').IncomingHttpHeaders} headers
  * @returns {import('http').RequestOptions}
  */
-const makeRequestOptions = (method, path, headers) => {
+export const makeRequestOptions = (method, path, headers) => {
     const options = {
         method,
         host : 'dare-nodejs-assessment.herokuapp.com',
@@ -14,7 +14,19 @@ const makeRequestOptions = (method, path, headers) => {
     if (headers) options.headers = headers
     return options
 }
-
-
-
-export { makeRequestOptions }
+/**
+ * 
+ * @param {string} body
+ * @returns {Object|string} 
+ */
+export const parseBody = (body) => {
+    try {
+        const parseAttempt = JSON.parse(body)
+        const type = Object.prototype.toString.call(parseAttempt)
+        return type === '[object Object]' || type === '[object Array]'
+            ? parseAttempt
+            : body
+    } catch (err) {
+        return body
+    }
+}

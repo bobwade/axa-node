@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --experimental-modules ./**/*.test.mjs",
+    "test": "mocha --timeout 5000 --experimental-modules ./**/*.test.mjs",
     "start": "node index.js",
     "lint": "./node_modules/.bin/eslint \"**/*.js\""
   },
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/bobwade/axa-node#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1"
   },
   "devDependencies": {

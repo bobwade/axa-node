@@ -1,4 +1,5 @@
 import { request } from 'https'
+import { parseBody } from '../index.js'
 
 export class Request {
     /**
@@ -19,7 +20,7 @@ export class Request {
     createOriginResponse(incomingMessage) {
         const response = {
             statusCode: incomingMessage.statusCode,
-            body: this.responseBody,
+            body: parseBody(this.responseBody),
             headers: incomingMessage.headers
         }
         console.log(response)

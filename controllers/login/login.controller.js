@@ -7,25 +7,26 @@ import { ErrorResponse, OriginHttpError } from '../error-response/error-response
  * @param {import('express').Response} res 
  */
 const respondToUnauthorisedRequest = (res) => {
-    const errorResponse = new ErrorResponse(502, l10n.login.unauthorised)
+    const errorResponse = new ErrorResponse(401, l10n.login.unauthorised)
     return errorResponse.send(res)
 }
 
 /**
  * 
  * @param {import('express').Response} res 
- * @param {OriginResponse} originResponse 
+ * @param {OriginLoginSuccessResponse} originResponse 
  */
 const handleOriginResponse = (res, originResponse) => {
     if (originResponse.statusCode !== 200) return respondToUnauthorisedRequest(res)
-    const body = JSON.parse(originResponse.body)
+    /**@type LoginSuccess */
+    const response ={
+        'token': originResponse.body.token,
+        'type': originResponse.body.type,
+        'expires': 0
+    }
     res.status(200)
         .set({'Content-Type': 'application/json'})
-        .end(JSON.stringify({
-            'token': body.token,
-            'type': body.type,
-            'expires': 0
-        }))
+        .end(JSON.stringify(response))
 }
 
 /**

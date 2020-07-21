@@ -1,27 +1,16 @@
-import { l10n } from '../../l10n/l10n.js';
 import { ClientPolicyService } from '../../services/client/policy/client.policy.service.js'
-import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
+import { OriginHttpError, genericOriginErrorResponse, unauthorizedErrorResponse } from '../error-response/error-response.js'
 
 /**
  * 
  * @param {import('express').Response} res 
- * @param {OriginResponse} originResponse 
+ * @param {OriginPoliciesResponse} originResponse 
  */
 const handleSuccess = (res, originResponse) => {
     res.status(200)
         .set({'Content-Type': 'application/json'})
         .set({'ETag': originResponse.headers.etag})
         .end(JSON.stringify(originResponse.body))
-}
-
-/**
- * 
- * @param {import('express').Response} res 
- * @param {OriginResponse} originResponse 
- */
-const handleError = (res, originResponse) => {
-    const err = new ErrorResponse(originResponse.statusCode, originResponse.body)
-    return err.send(res)
 }
 
 /**
@@ -40,17 +29,6 @@ const handleNotChanged = (res, originResponse) => {
  * @param {import('express').Response} res 
  * @param {OriginResponse} originResponse 
  */
-const handleTokenExpired = (res, originResponse) => {
-    const err = new ErrorResponse(originResponse.statusCode, l10n.error.authExpired)
-    res.set('WWW-Authenticate',`Bearer error="invalid_token", error_description="${l10n.error.authExpired}"`)
-    return err.send(res)
-}
-
-/**
- * 
- * @param {import('express').Response} res 
- * @param {OriginResponse} originResponse 
- */
 const handleOriginResponse = (res, originResponse) => {
     switch (originResponse.statusCode) {
     case 200 :
@@ -58,9 +36,9 @@ const handleOriginResponse = (res, originResponse) => {
     case 304 :
         return handleNotChanged(res, originResponse)
     case 401 :
-        return handleTokenExpired(res, originResponse)
+        return unauthorizedErrorResponse(res, originResponse)
     default :
-        return handleError(res, originResponse)
+        return genericOriginErrorResponse(res, originResponse)
     }
 }
 

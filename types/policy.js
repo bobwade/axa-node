@@ -7,3 +7,10 @@
  * @property {boolean} installmentPayment
  * @property {string} clientId
  */
+
+/**
+ * @typedef {Object} OriginPoliciesResponse
+ * @property {number} statusCode
+ * @property {Policy[]} body
+ * @property {import('http').IncomingHttpHeaders} headers
+*/

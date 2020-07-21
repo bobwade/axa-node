@@ -2,7 +2,6 @@ import { ErrorResponse } from '../error-response/error-response.js'
 import { l10n } from '../../l10n/l10n.js'
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */

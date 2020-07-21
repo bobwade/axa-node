@@ -1,19 +1,48 @@
 import { OriginClientService } from '../../origin/client/origin.client.service.js'
 import { ClientPolicyService } from '../../client/policy/client.policy.service.js'
 
-import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
-import { l10n } from '../../../l10n/l10n.js'
+import { isArray, paginate } from '../utils.js'
+
+/**
+ * 
+ * @param {Client} client
+ * @param {Policy[]} policies
+ * @returns {Client}
+ */
+const assignPoliciesToClient = (client, policies) => Object.assign(client, {policies: policies.filter(policy => policy.clientId = client.id)})
+
+/**
+ * 
+ * @param {Client[]} clients
+ * @param {Policy[]} policies
+ */
+const assignPoliciesToClients = (clients, policies) => clients.map(client => assignPoliciesToClient(client, policies))
+
+
+/**
+ * @param {Client[]} clients
+ * @param {string} name
+ */
+const filterClientsByName = (clients, name) => {
+    const match = new RegExp(name, 'g')
+    return clients.filter(client => match.test(client.name))
+}
+
+/**
+ * @param {Client[]} clients
+ * @param {string} id
+ */
+const filterClientsById = (clients, id) => clients.filter(client => client.id = id)
 
 export class ClientClientService {
     /**
-     * 
      * @param {import('express').Request} req
-     * @returns {Promise<OriginResponse>}
+     * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
     static async get(req) {
         try {
             const originResponse = await this.getAll(req)
-            if(isJsonResponse(originResponse) && isParsableJson(originResponse)) originResponse.body = paginate(JSON.parse(originResponse.body), req.query)
+            if(isArray(originResponse.body)) originResponse.body = paginate(originResponse.body, req.query)
             return originResponse
         } catch (err) {
             return err
@@ -22,37 +51,21 @@ export class ClientClientService {
 
     /**
      * 
-     * @param {OriginResponse} clientsResponse 
-     * @param {string} id
-     * @returns {(false|Client)}
-     */
-    static clientWithId(clientsResponse, id) {
-        console.log(clientsResponse.body)
-        return (!isJsonResponse(clientsResponse)
-        || !isParsableJson(clientsResponse)
-        || !(JSON.parse(clientsResponse.body).some(client => client.id === id)))
-            ? false
-            : JSON.parse(clientsResponse.body).filter(client => client.id === id)[0]
-    }
-
-    /**
-     * 
      * @param {import('express').Request} req
-     * @returns {Promise<OriginResponse>}
+     * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
-    static async getByID(req) {
+    static async getAllWithPolicies(req) {
         try {
-            const id = req.params.id
-            const originResponse = await this.getAll(req) 
-            const client = this.clientWithId(originResponse, id)
-            if (!client) return ({statusCode: 404, body: l10n.client.with_id_not_found(id), headers:{}})
-            originResponse.body = client
-            const originPolicyResponse = await ClientPolicyService.getById(req)
-            console.log(originPolicyResponse)
-            originResponse.body.policies = originPolicyResponse.body
-            return originResponse
+            const headers = { authorization: req.headers.authorization }
+            if(req.headers['if-none-match']) headers['if-none-match'] = req.headers['if-none-match']
+            const clientResponse = await OriginClientService.get(headers)
+            if(clientResponse.statusCode !== 200) return clientResponse
+            /**@type {OriginPoliciesResponse} */
+            const policyResponse = await ClientPolicyService.getByClientId(req)
+            if(policyResponse.statusCode !== 200) return clientResponse
+            Object.assign(clientResponse, {body: assignPoliciesToClients(clientResponse.body, policyResponse.body)})
+            return Object.assign(clientResponse, {body: assignPoliciesToClients(clientResponse.body, policyResponse.body)})
         } catch (err) {
-            console.log(err)
             return err
         }
     }
@@ -60,16 +73,29 @@ export class ClientClientService {
     /**
      * 
      * @param {import('express').Request} req
-     * @returns {Promise<OriginResponse>}
+     * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
     static async getAll(req) {
         try {
-            const headers = { authorization: req.headers.authorization }
-            if(req.headers['if-none-match']) headers['if-none-match'] = req.headers['if-none-match']
-            const originResponse = await OriginClientService.get(headers)
-            return originResponse
+            /** @type {OriginClientsResponse} */
+            const originResponse = await this.getAllWithPolicies(req)
+            if(req.query.name && typeof req.query.name === 'string') originResponse.body = filterClientsByName(originResponse.body, req.query.name)
+            return Object.assign(originResponse, {body: paginate(originResponse.body, req.query)})
         } catch (err) {
-            console.log(err)
+            return err
+        }
+    }
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginClientsResponse|OriginResponse>}
+     */
+    static async getByID(req) {
+        try {
+            /** @type {OriginClientsResponse} */
+            const originResponse = await this.getAllWithPolicies(req)      
+            return Object.assign(originResponse,{body: filterClientsById(originResponse.body, req.params.id)})
+        } catch (err) {
             return err
         }
     }

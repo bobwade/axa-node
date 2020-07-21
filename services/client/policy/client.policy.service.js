@@ -1,28 +1,38 @@
 import { OriginPolicyService } from '../../origin/policy/origin.policy.service.js'
-import { isJsonResponse, isParsableJson, paginate } from '../utils.js'
+import { isArray, paginate } from '../utils.js'
+
+/**
+ * 
+ * @param {Policy[]} policies 
+ * @param {string} clientId
+ * @returns {Policy[]}
+ */
+const filterByClientId= (policies, clientId) => {
+    if (!policies.length || typeof policies !== 'object') return policies
+    return policies.filter(policy => policy.clientId === clientId)
+}
+
+/**
+ * 
+ * @param {Policy[]} policies 
+ * @param {string} id
+ * @returns {Policy[]}
+ */
+const filterByPolicyId= (policies, id) => {
+    if (!policies.length || typeof policies !== 'object') return policies
+    return policies.filter(policy => policy.id === id)
+}
 
 export class ClientPolicyService {
     /**
      * 
-     * @param {Policy[]} policies 
-     * @param {string} id
-     * @returns {Policy[]}
-     */
-    static filterById(policies, id) {
-        console.log(policies, id)
-        if (!policies.length || typeof policies !== 'object') return policies
-        return policies.filter(policy => policy.id === id)
-    }
-
-    /**
-     * 
      * @param {import('express').Request} req
-     * @returns {Promise<OriginResponse>}
+     * @returns {Promise<OriginPoliciesResponse|OriginResponse>}
      */
     static async get(req) {
         try {
             const originResponse = await this.getAll(req)
-            if(isJsonResponse(originResponse) && isParsableJson(originResponse)) originResponse.body = paginate(JSON.parse(originResponse.body), req.query)
+            if(isArray(originResponse.body)) originResponse.body = paginate(originResponse.body, req.query)
             return originResponse
         } catch (err) {
             return err
@@ -32,12 +42,27 @@ export class ClientPolicyService {
     /**
      * 
      * @param {import('express').Request} req
-     * @returns {Promise<OriginResponse>}
+     * @returns {Promise<OriginPoliciesResponse|OriginResponse>}
+     */
+    static async getByClientId(req) {
+        try {
+            const originResponse = await this.getAll(req)
+            if(isArray(originResponse.body)) originResponse.body = filterByClientId(originResponse.body, req.params.id)
+            return originResponse
+        } catch (err) {
+            console.log(err)
+            return err
+        }
+    }
+    /**
+     * 
+     * @param {import('express').Request} req
+     * @returns {Promise<OriginPoliciesResponse|OriginResponse>}
      */
     static async getById(req) {
         try {
             const originResponse = await this.getAll(req)
-            if(isJsonResponse(originResponse) && isParsableJson(originResponse)) originResponse.body = this.filterById(JSON.parse(originResponse.body), req.params.id)
+            if(isArray(originResponse.body)) originResponse.body = filterByPolicyId(originResponse.body, req.params.id)
             return originResponse
         } catch (err) {
             console.log(err)

@@ -2,7 +2,6 @@ import { l10n } from '../../l10n/l10n.js'
 
 export class ErrorResponse {
     /**
-     * 
      * @param {number} code 
      * @param {string} message
      */
@@ -16,7 +15,6 @@ export class ErrorResponse {
     }
 
     /**
-     * 
      * @param {number} code 
      */
     setCode(code) {
@@ -28,7 +26,6 @@ export class ErrorResponse {
     }
 
     /**
-     * 
      * @param {string} message 
      */
     setMessage(message) {
@@ -37,7 +34,6 @@ export class ErrorResponse {
     }
 
     /**
-     * 
      * @param {import('express').Response} res
      */
     send(res) {
@@ -54,4 +50,31 @@ export class ErrorResponse {
 export const OriginHttpError = (res) => {
     const errorResponse = new ErrorResponse(502, `${l10n.error.upstreamError}${res.locals.originError ? '\n' + res.locals.originError: ''}`)
     return errorResponse.send(res)
+}
+
+
+/**
+ * 
+ * @param {import('express').Response} res
+ * @param {OriginErrorResponse} originResponse 
+ */
+export const genericOriginErrorResponse = (res, originResponse) => {
+    /**@type {OriginError} */
+    const originBody = originResponse.body
+    const errorResponse = new ErrorResponse(originBody.statusCode, originBody.message)
+    return errorResponse.send(res)
+}
+
+/**
+ * 
+ * @param {import('express').Response} res 
+ * @param {OriginErrorResponse} originResponse 
+ */
+export const unauthorizedErrorResponse = (res, originResponse) => {
+    /**@type {OriginError} */
+    const originBody = originResponse.body
+    const authExpired = /expired/.test(originBody.message)
+    const err = new ErrorResponse(originResponse.statusCode, authExpired ? l10n.error.authExpired : l10n.error.invalidAuthHeader)
+    res.set('WWW-Authenticate',`Bearer error="${authExpired ? 'invalid_token' : 'invalid_request'}", error_description="${authExpired ? l10n.error.authExpired : l10n.error.invalidAuthHeader}"`)
+    return err.send(res)
 }
