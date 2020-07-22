@@ -8,7 +8,7 @@
 export const makeRequestOptions = (method, path, headers) => {
     const options = {
         method,
-        host : 'dare-nodejs-assessment.herokuapp.com',
+        host : process.env.ORIGIN_HOST,
         path: `/api/${path}`
     }
     if (headers) options.headers = headers

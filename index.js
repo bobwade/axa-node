@@ -1,8 +1,8 @@
-import express from 'express'
-import { AppRouter } from './routes/router.js'
+import dotenv from 'dotenv';
+import { Server } from './server.js'
+const { config } = dotenv
+config()
 
-const port = 3000
-const app = express()
-
-app.use('/', AppRouter)
-app.listen(port, () => console.log(`listening on ${port}`))
+const port = parseInt((process.env.SERVER_PORT))
+const server = new Server(port)
+server.start(`AXA test app starting on port ${port}`)
