@@ -1,8 +1,19 @@
 import { ClientPolicyService } from '../../services/client/policy/client.policy.service.js'
-import { OriginHttpError, genericOriginErrorResponse, unauthorizedErrorResponse } from '../error-response/error-response.js'
+import { OriginHttpError, genericOriginErrorResponse, unauthorizedErrorResponse, ErrorResponse } from '../error-response/error-response.js'
+import { l10n } from '../../l10n/l10n.js'
 
 /**
- * 
+ * @param {import('express').Response} res 
+ * @param {OriginPoliciesResponse} originResponse 
+ */
+const handleNotFound = (res, originResponse) => {
+    console.log(originResponse.headers)
+    res.set({'ETag': originResponse.headers.etag})
+    const errorResponse = new ErrorResponse(404, l10n.policy.not_found)
+    return errorResponse.send(res)
+}
+
+/**
  * @param {import('express').Response} res 
  * @param {OriginPoliciesResponse} originResponse 
  */
@@ -11,6 +22,16 @@ const handleSuccess = (res, originResponse) => {
         .set({'Content-Type': 'application/json'})
         .set({'ETag': originResponse.headers.etag})
         .end(JSON.stringify(originResponse.body))
+}
+
+/**
+ * @param {import('express').Response} res 
+ * @param {OriginPoliciesResponse} originResponse 
+ */
+const handleOriginSuccess = (res, originResponse) => {
+    return originResponse.body.length === 0 
+        ? handleNotFound(res, originResponse)
+        : handleSuccess(res, originResponse)
 }
 
 /**
@@ -32,7 +53,7 @@ const handleNotChanged = (res, originResponse) => {
 const handleOriginResponse = (res, originResponse) => {
     switch (originResponse.statusCode) {
     case 200 :
-        return handleSuccess(res, originResponse)
+        return handleOriginSuccess(res, originResponse)
     case 304 :
         return handleNotChanged(res, originResponse)
     case 401 :

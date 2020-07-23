@@ -29,7 +29,6 @@ export class ErrorResponse {
      * @param {string} message 
      */
     setMessage(message) {
-        console.log((message))
         this.message = typeof message === 'string' ? message : l10n.error.fallbackErrorMessage
     }
 

@@ -1,7 +1,18 @@
 import { ClientClientService } from '../../services/client/client/client.client.service.js'
-import { OriginHttpError, genericOriginErrorResponse, unauthorizedErrorResponse } from '../error-response/error-response.js'
+import { OriginHttpError, genericOriginErrorResponse, unauthorizedErrorResponse, ErrorResponse } from '../error-response/error-response.js'
+import { l10n } from '../../l10n/l10n.js'
+
 /**
- * 
+ * @param {import('express').Response} res
+ * @param {OriginClientsResponse} originResponse 
+ */
+const handleNotFound = (res, originResponse) => {
+    res.set({'ETag': originResponse.headers.etag})
+    const errorResponse = new ErrorResponse(404, l10n.client.not_found)
+    return errorResponse.send(res)
+}
+
+/**
  * @param {import('express').Response} res 
  * @param {OriginClientsResponse} originResponse 
  */
@@ -13,7 +24,16 @@ const handleSuccess = (res, originResponse) => {
 }
 
 /**
- * 
+ * @param {import('express').Response} res 
+ * @param {OriginClientsResponse} originResponse 
+ */
+const handleOriginSuccess = (res, originResponse) => {
+    return originResponse.body.length === 0 
+        ? handleNotFound(res, originResponse)
+        : handleSuccess(res, originResponse)
+
+}
+/**
  * @param {import('express').Response} res 
  * @param {OriginResponse} originResponse 
  */
@@ -30,7 +50,7 @@ const handleNotChanged = (res, originResponse) => {
 const handleOriginResponse = (res, originResponse) => {
     switch (originResponse.statusCode) {
     case 200 :
-        return handleSuccess(res, originResponse)
+        return handleOriginSuccess(res, originResponse)
     case 304 :
         return handleNotChanged(res, originResponse)
     case 401 :
@@ -41,7 +61,6 @@ const handleOriginResponse = (res, originResponse) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
@@ -56,7 +75,6 @@ export const get = async (req, res) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */

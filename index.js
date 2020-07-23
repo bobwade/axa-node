@@ -1,5 +1,6 @@
-import dotenv from 'dotenv';
+import dotenv from 'dotenv'
 import { Server } from './server.js'
+
 const { config } = dotenv
 config()
 

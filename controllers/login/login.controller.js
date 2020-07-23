@@ -37,7 +37,6 @@ const handleOriginResponse = (res, originResponse) => {
 const post = async (req, res) => {
     try {
         const originResponse = await ClientLoginService.login(req.body)
-        console.log(originResponse)
         return handleOriginResponse(res, originResponse)
     } catch (err) {
         res.locals.originError = err

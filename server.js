@@ -14,9 +14,12 @@ export class Server {
         this.app.use('/', AppRouter)
     }
     /**
-     * @param {string} message 
+     * @param {string} message
      */
     start(message) {
         this.server = this.app.listen(this.port, () => console.log(message))
+    }
+    getServer() {
+        return this.server
     }
 }

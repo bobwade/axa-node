@@ -50,7 +50,6 @@ export class ClientPolicyService {
             if(isArray(originResponse.body)) originResponse.body = filterByClientId(originResponse.body, req.params.id)
             return originResponse
         } catch (err) {
-            console.log(err)
             return err
         }
     }
@@ -65,7 +64,6 @@ export class ClientPolicyService {
             if(isArray(originResponse.body)) originResponse.body = filterByPolicyId(originResponse.body, req.params.id)
             return originResponse
         } catch (err) {
-            console.log(err)
             return err
         }
     }
@@ -82,7 +80,6 @@ export class ClientPolicyService {
             const originResponse = await OriginPolicyService.get(headers)
             return originResponse
         } catch (err) {
-            console.log(err)
             return err
         }
     }

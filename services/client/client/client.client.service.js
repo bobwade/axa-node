@@ -18,7 +18,6 @@ const assignPoliciesToClient = (client, policies) => Object.assign(client, {poli
  */
 const assignPoliciesToClients = (clients, policies) => clients.map(client => assignPoliciesToClient(client, policies))
 
-
 /**
  * @param {Client[]} clients
  * @param {string} name
@@ -32,7 +31,7 @@ const filterClientsByName = (clients, name) => {
  * @param {Client[]} clients
  * @param {string} id
  */
-const filterClientsById = (clients, id) => clients.filter(client => client.id = id)
+const filterClientsById = (clients, id) => clients.filter(client => client.id === id)
 
 export class ClientClientService {
     /**

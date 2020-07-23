@@ -23,7 +23,6 @@ export class Request {
             body: parseBody(this.responseBody),
             headers: incomingMessage.headers
         }
-        console.log(response)
         return response
     }
     /**

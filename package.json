@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --timeout 5000 --experimental-modules ./**/*.test.mjs",
+    "test": "mocha --require=dotenv/config --timeout=5000 --experimental-modules ./**/*.test.mjs",
     "start": "node index.js",
     "lint": "./node_modules/.bin/eslint \"**/*.js\""
   },
@@ -27,6 +27,7 @@
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.5.0",
-    "mocha": "^8.0.1"
+    "mocha": "^8.0.1",
+    "supertest": "^4.0.2"
   }
 }
