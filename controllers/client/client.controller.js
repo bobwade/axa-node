@@ -1,4 +1,5 @@
 import { ClientClientService } from '../../services/client/client/client.client.service.js'
+import { ClientPolicyService } from '../../services/client/policy/client.policy.service.js'
 import { OriginHttpError, genericOriginErrorResponse, unauthorizedErrorResponse, ErrorResponse } from '../error-response/error-response.js'
 import { l10n } from '../../l10n/l10n.js'
 
@@ -81,6 +82,20 @@ export const get = async (req, res) => {
 export const getByID = async (req, res) => {
     try {
         const originResponse = await ClientClientService.getByID(req) 
+        return handleOriginResponse(res, originResponse)
+    } catch (err) {
+        res.locals.originError = err
+        return OriginHttpError(res)
+    }
+}
+
+/**
+ * @param {import('express').Request} req 
+ * @param {import('express').Response} res 
+ */
+export const getPoliciesByID  = async (req, res) => {
+    try {
+        const originResponse = await ClientPolicyService.getByClientId(req)
         return handleOriginResponse(res, originResponse)
     } catch (err) {
         res.locals.originError = err

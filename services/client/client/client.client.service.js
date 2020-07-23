@@ -67,7 +67,6 @@ export class ClientClientService {
             const headers = { authorization: req.headers.authorization }
             if(req.headers['if-none-match']) headers['if-none-match'] = req.headers['if-none-match']
             const clientResponse = await OriginClientService.get(headers)
-            console.log(clientResponse)
             if(clientResponse.statusCode !== 200) return clientResponse
             /**@type {OriginPoliciesResponse} */
             const policyResponse = await ClientPolicyService.getAll(req)
