@@ -4,7 +4,7 @@ To set up this app:
 
  * clone the repository
  * run `npm install` to download necessary packages
- * rename `./example.env` to `./.env` and fill in the details
+ * rename `./example.env` to `./.env` and fill in the details (test_user/test_pass are those given in the assessment)
  * try the scripts below!
 
 ## Scripts
