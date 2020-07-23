@@ -7,7 +7,6 @@ import { l10n } from '../../l10n/l10n.js'
  * @param {OriginPoliciesResponse} originResponse 
  */
 const handleNotFound = (res, originResponse) => {
-    console.log(originResponse.headers)
     res.set({'ETag': originResponse.headers.etag})
     const errorResponse = new ErrorResponse(404, l10n.policy.not_found)
     return errorResponse.send(res)

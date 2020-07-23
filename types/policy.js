@@ -9,6 +9,13 @@
  */
 
 /**
+ * @typedef ClientPolicy
+ * @property {string} id
+ * @property {string} amountInsured
+ * @property {string} inceptionDate
+ */
+
+/**
  * @typedef {Object} OriginPoliciesResponse
  * @property {number} statusCode
  * @property {Policy[]} body

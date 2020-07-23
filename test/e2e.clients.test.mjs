@@ -32,6 +32,35 @@ describe('E2E: GET /clients', () => {
             })
         })
     })
+    it('should return correct fields on success', () => {
+        return login.then(loginResponse => {
+                server.get('/clients')
+                .set('Authorization', `Bearer ${loginResponse.body.token}`)
+                .then(response => {
+                    const client = response.body[0]
+                    assert.strictEqual(typeof client.id, 'string')
+                    assert.strictEqual(typeof client.name, 'string')
+                    assert.strictEqual(typeof client.email, 'string')
+                    assert.strictEqual(typeof client.role, 'string')
+                    assert.strictEqual(typeof client.policies, 'object')
+            })
+        })
+    })
+    it('should return policies as field, with correct subfields', () => {
+        return login.then(loginResponse => {
+                server.get('/clients')
+                .set('Authorization', `Bearer ${loginResponse.body.token}`)
+                .then(response => {
+                    const policies = response.body.filter(c => c.role === 'admin')[0].policies
+                    assert.strictEqual(typeof policies, 'object')
+                    assert.strictEqual(typeof policies[0].id, 'string')
+                    assert.strictEqual(typeof policies[0].amountInsured, 'string')
+                    assert.strictEqual(typeof policies[0].inceptionDate, 'string')
+                    assert.strictEqual(Object.keys(policies[0]).length, 3)
+
+            })
+        })
+    })
     it('should return a 304 with valid If-None-Match header', () => {
         return login.then(loginResponse => {
             server.get('/clients')
@@ -70,6 +99,19 @@ describe('E2E: GET /clients', () => {
                 .set('Authorization', `Bearer ${loginResponse.body.token}`)
                 .then(response => {
                     assert.strictEqual(response.statusCode, 404)
+            })
+        })
+    })
+    it('should return 200 response with real name query', () => {
+        return login.then(loginResponse => {
+                server.get('/clients')
+                .set('Authorization', `Bearer ${loginResponse.body.token}`)
+                .then(firstResponse => {
+                    server.get(`/clients?name=${firstResponse.body[0].name}`)
+                    .set('Authorization', `Bearer ${loginResponse.body.token}`)
+                    .then(response => {
+                        assert.strictEqual(response.statusCode, 200)
+                    })
             })
         })
     })

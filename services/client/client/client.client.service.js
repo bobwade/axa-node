@@ -3,13 +3,25 @@ import { ClientPolicyService } from '../../client/policy/client.policy.service.j
 
 import { isArray, paginate } from '../utils.js'
 
+
 /**
  * @param {Client} client
  * @param {Policy[]} policies
  * @returns {Client}
  */
-const assignPoliciesToClient = (client, policies) => Object.assign(client, {policies: policies.filter(policy => policy.clientId = client.id)})
-
+const assignPoliciesToClient = (client, policies) => {
+    const filteredPolicies = policies.filter(policy => policy.clientId = client.id)
+    /**@type {ClientPolicy[]} */
+    const clientPolicies = filteredPolicies.length === 0
+        ? []
+        : filteredPolicies.map(policy => ({
+            id: policy.id,
+            amountInsured: policy.amountInsured,
+            inceptionDate: policy.inceptionDate
+        }))
+                                    
+    return Object.assign(client, {policies: clientPolicies})
+}
 /**
  * @param {Client[]} clients
  * @param {Policy[]} policies
@@ -55,11 +67,12 @@ export class ClientClientService {
             const headers = { authorization: req.headers.authorization }
             if(req.headers['if-none-match']) headers['if-none-match'] = req.headers['if-none-match']
             const clientResponse = await OriginClientService.get(headers)
+            console.log(clientResponse)
             if(clientResponse.statusCode !== 200) return clientResponse
             /**@type {OriginPoliciesResponse} */
-            const policyResponse = await ClientPolicyService.getByClientId(req)
+            const policyResponse = await ClientPolicyService.getAll(req)
             if(policyResponse.statusCode !== 200) return clientResponse
-            Object.assign(clientResponse, {body: assignPoliciesToClients(clientResponse.body, policyResponse.body)})
+            clientResponse.body = assignPoliciesToClients(clientResponse.body, policyResponse.body)
             return Object.assign(clientResponse, {body: assignPoliciesToClients(clientResponse.body, policyResponse.body)})
         } catch (err) {
             return err
@@ -67,13 +80,14 @@ export class ClientClientService {
     }
     
     /**
-         * @param {import('express').Request} req
+     * @param {import('express').Request} req
      * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
     static async getAll(req) {
         try {
             /** @type {OriginClientsResponse} */
             const originResponse = await this.getAllWithPolicies(req)
+            if(originResponse.statusCode === 401) return originResponse
             if(req.query.name && typeof req.query.name === 'string') originResponse.body = filterClientsByName(originResponse.body, req.query.name)
             return Object.assign(originResponse, {body: paginate(originResponse.body, req.query)})
         } catch (err) {

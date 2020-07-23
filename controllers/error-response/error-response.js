@@ -46,7 +46,7 @@ export class ErrorResponse {
  * @param {import('express').Response} res
  */
 export const OriginHttpError = (res) => {
-    const errorResponse = new ErrorResponse(502, `${l10n.error.upstreamError}${res.locals.originError ? '\n' + res.locals.originError: ''}`)
+    const errorResponse = new ErrorResponse(502, `${l10n.error.upstreamError}${res.locals.originError ? ' ' + res.locals.originError: ''}`)
     return errorResponse.send(res)
 }
 

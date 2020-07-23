@@ -4,7 +4,7 @@
  * @property {string} name
  * @property {string} email
  * @property {string} role
- * @property {Policy[]} [policies]
+ * @property {ClientPolicy[]} [policies]
  */
 
 /**
