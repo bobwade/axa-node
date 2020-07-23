@@ -35,7 +35,6 @@ const handleOriginSuccess = (res, originResponse) => {
 }
 
 /**
- * 
  * @param {import('express').Response} res 
  * @param {OriginResponse} originResponse 
  */
@@ -46,7 +45,6 @@ const handleNotChanged = (res, originResponse) => {
 }
 
 /**
- * 
  * @param {import('express').Response} res 
  * @param {OriginResponse} originResponse 
  */
@@ -64,7 +62,6 @@ const handleOriginResponse = (res, originResponse) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */
@@ -79,7 +76,6 @@ export const get = async (req, res) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */

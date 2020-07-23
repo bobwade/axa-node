@@ -2,7 +2,6 @@ import { OriginPolicyService } from '../../origin/policy/origin.policy.service.j
 import { isArray, paginate } from '../utils.js'
 
 /**
- * 
  * @param {Policy[]} policies 
  * @param {string} clientId
  * @returns {Policy[]}
@@ -13,7 +12,6 @@ const filterByClientId= (policies, clientId) => {
 }
 
 /**
- * 
  * @param {Policy[]} policies 
  * @param {string} id
  * @returns {Policy[]}
@@ -25,8 +23,7 @@ const filterByPolicyId= (policies, id) => {
 
 export class ClientPolicyService {
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginPoliciesResponse|OriginResponse>}
      */
     static async get(req) {
@@ -40,8 +37,7 @@ export class ClientPolicyService {
     }
 
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginPoliciesResponse|OriginResponse>}
      */
     static async getByClientId(req) {
@@ -54,8 +50,7 @@ export class ClientPolicyService {
         }
     }
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginPoliciesResponse|OriginResponse>}
      */
     static async getById(req) {
@@ -69,8 +64,7 @@ export class ClientPolicyService {
     }
     
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginResponse>}
      */
     static async getAll(req) {

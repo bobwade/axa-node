@@ -1,5 +1,4 @@
 /**
- * 
  * @param {any[]} responseArray 
  * @param {PaginateQuery} query 
  */

@@ -13,8 +13,7 @@ export class Request {
         this.responseBody += chunk.toString()
     }
     /**
-     * 
-     * @param {import('http').IncomingMessage} incomingMessage
+         * @param {import('http').IncomingMessage} incomingMessage
      * @returns {OriginResponse}
      */
     createOriginResponse(incomingMessage) {
@@ -26,8 +25,7 @@ export class Request {
         return response
     }
     /**
-     * 
-     * @param {*} [requestBody]
+         * @param {*} [requestBody]
      * @returns {Promise<OriginResponse>}
      */
     send(requestBody) {

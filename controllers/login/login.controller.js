@@ -3,7 +3,6 @@ import { ClientLoginService } from '../../services/client/login/client.login.ser
 import { ErrorResponse, OriginHttpError } from '../error-response/error-response.js'
 
 /**
- * 
  * @param {import('express').Response} res 
  */
 const respondToUnauthorisedRequest = (res) => {
@@ -12,7 +11,6 @@ const respondToUnauthorisedRequest = (res) => {
 }
 
 /**
- * 
  * @param {import('express').Response} res 
  * @param {OriginLoginSuccessResponse} originResponse 
  */
@@ -30,7 +28,6 @@ const handleOriginResponse = (res, originResponse) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  */

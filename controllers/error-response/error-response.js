@@ -43,7 +43,6 @@ export class ErrorResponse {
 }
 
 /**
- * 
  * @param {import('express').Response} res
  */
 export const OriginHttpError = (res) => {
@@ -53,7 +52,6 @@ export const OriginHttpError = (res) => {
 
 
 /**
- * 
  * @param {import('express').Response} res
  * @param {OriginErrorResponse} originResponse 
  */
@@ -65,7 +63,6 @@ export const genericOriginErrorResponse = (res, originResponse) => {
 }
 
 /**
- * 
  * @param {import('express').Response} res 
  * @param {OriginErrorResponse} originResponse 
  */

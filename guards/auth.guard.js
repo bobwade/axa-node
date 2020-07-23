@@ -2,7 +2,6 @@ import { l10n } from '../l10n/l10n.js'
 import { ErrorResponse } from '../controllers/error-response/error-response.js'
 
 /**
- * 
  * @param {import('http').IncomingHttpHeaders} headers
  * @returns {boolean}
  */
@@ -14,7 +13,6 @@ export const hasNoAuthorisationHeader = (headers) => {
 }
 
 /**
- * 
  * @param {import('http').IncomingHttpHeaders} headers
  * @returns {boolean}
  */
@@ -23,7 +21,6 @@ export const hasMalformedAuthorisationHeader = (headers) => {
 }
 
 /**
- * 
  * @param {import('express').Response} res 
  */
 const handleAuthError = (res) => {
@@ -33,7 +30,6 @@ const handleAuthError = (res) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  * @param {import('express').NextFunction} next 

@@ -4,8 +4,7 @@ import { makeRequestOptions } from '../index.js'
 export class OriginClientService {
     static endpoint = 'clients';
     /**
-     * 
-     * @param {import('http').IncomingHttpHeaders} headers
+         * @param {import('http').IncomingHttpHeaders} headers
      * @returns {Promise<OriginResponse>}
      */
     static get(headers) {

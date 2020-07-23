@@ -1,5 +1,4 @@
 /**
- * 
  * @param {'GET'|'POST'|'PUT'|'DELETE'} method 
  * @param {string} path 
  * @param {import('http').IncomingHttpHeaders} headers
@@ -15,7 +14,6 @@ export const makeRequestOptions = (method, path, headers) => {
     return options
 }
 /**
- * 
  * @param {string} body
  * @returns {Object|string} 
  */

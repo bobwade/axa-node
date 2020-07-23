@@ -2,7 +2,6 @@ import { l10n } from '../l10n/l10n.js'
 import { ErrorResponse } from '../controllers/error-response/error-response.js'
 
 /**
- * 
  * @param {ClientLogin} body
  * @returns {boolean} 
  */
@@ -17,7 +16,6 @@ const isABadPostRequest = body => {
 }
 
 /**
- * 
  * @param {import('express').Response} res 
  */
 const respondToBadRequest = (res) => {
@@ -26,7 +24,6 @@ const respondToBadRequest = (res) => {
 }
 
 /**
- * 
  * @param {import('express').Request} req 
  * @param {import('express').Response} res 
  * @param {import('express').NextFunction} next 

@@ -4,7 +4,6 @@ import { ClientPolicyService } from '../../client/policy/client.policy.service.j
 import { isArray, paginate } from '../utils.js'
 
 /**
- * 
  * @param {Client} client
  * @param {Policy[]} policies
  * @returns {Client}
@@ -12,7 +11,6 @@ import { isArray, paginate } from '../utils.js'
 const assignPoliciesToClient = (client, policies) => Object.assign(client, {policies: policies.filter(policy => policy.clientId = client.id)})
 
 /**
- * 
  * @param {Client[]} clients
  * @param {Policy[]} policies
  */
@@ -49,8 +47,7 @@ export class ClientClientService {
     }
 
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
     static async getAllWithPolicies(req) {
@@ -70,8 +67,7 @@ export class ClientClientService {
     }
     
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
     static async getAll(req) {
@@ -85,8 +81,7 @@ export class ClientClientService {
         }
     }
     /**
-     * 
-     * @param {import('express').Request} req
+         * @param {import('express').Request} req
      * @returns {Promise<OriginClientsResponse|OriginResponse>}
      */
     static async getByID(req) {
