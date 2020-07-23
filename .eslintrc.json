@@ -26,12 +26,17 @@
             "error",
             "single"
         ],
-        "no-console": [
+        "block-scoped-var": [
+            "error"
+        ],
+        "no-else-return": [
             "error"
         ],
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "no-unused-expressions": "error",
+        "no-var": "error"
     }
 }

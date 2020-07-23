@@ -35,7 +35,7 @@ export class Request {
                 incomingMessage.on('close', () => resolve(this.createOriginResponse(incomingMessage)))
             })
             this.request.on('error', err => reject({message: err}))
-            this.options.method === 'POST' ? this.request.end(JSON.stringify(requestBody)) : this.request.end()
+            return this.options.method === 'POST' ? this.request.end(JSON.stringify(requestBody)) : this.request.end()
         })
     }
 }

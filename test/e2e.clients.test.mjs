@@ -281,29 +281,20 @@ describe('E2E: GET /clients/:id/policies', () => {
     })
     it('should return 404 response with bogus id', () => {
         return login.then(loginResponse => {
-            server.get('/clients')
+            server.get(`/clients/dummy/policies`)
                 .set('Authorization', `Bearer ${loginResponse.body.token}`)
-                .then(firstResponse => {
-                    server.get(`/clients/dummy/policies`)
-                        .set('Authorization', `Bearer ${loginResponse.body.token}`)
-                        .then(response => {
-                            assert.strictEqual(response.statusCode, 404)
-                        })
+                .then(response => {
+                    assert.strictEqual(response.statusCode, 404)
                 })
         })
     })
     it('should return correct fields with bogus id', () => {
         return login.then(loginResponse => {
-            server.get('/clients')
+            server.get(`/clients/dummy/policies`)
                 .set('Authorization', `Bearer ${loginResponse.body.token}`)
-                .then(firstResponse => {
-                    server.get(`/clients/dummy/policies`)
-                        .set('Authorization', `Bearer ${loginResponse.body.token}`)
-                        .then(response => {
-                            console.log(response)
-                            assert.strictEqual(typeof response.body.code, 'number')
-                            assert.strictEqual(typeof response.body.message, 'string')
-                        })
+                .then(response => {
+                    assert.strictEqual(typeof response.body.code, 'number')
+                    assert.strictEqual(typeof response.body.message, 'string')
                 })
         })
     })

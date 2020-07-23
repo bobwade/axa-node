@@ -2,7 +2,7 @@ import { Server } from '../server.js'
 import assert from 'assert'
 import { request } from './es6_supertest.js'
 
-const server = new Server(3000)
+const server = new Server(3003)
 server.start('e2e: AXA test server started')
 
 describe('E2E: POST /login', () => {

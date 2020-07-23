@@ -1,8 +1,35 @@
 # Node REST API Technical Test
 
+To set up this app:
+
+ * clone the repository
+ * run `npm install` to download necessary packages
+ * rename `./example.env` to `./.env` and fill in the details
+ * try the scripts below!
+
+## Scripts
+
+#### Run the app
+
+`npm start`
+
+The app uses Express, with the only other dependencies when running being body parser and dotenv, which stores environment variables.
+
+#### Test the app
+
+`npm test`
+
+There are end to end tests in the `./test/**` folder and some integration/unit tests alongside the code modules themselves. The test runner is Mocha, using the inbuilt assert library for node, and supertest to run the app for e2e.
+
+#### Lint the code
+
+`npm run lint`
+
+Using eslint with some basic configuration.
+
 ## Architecture
 
-My first thought was that this at it's root is a transformation proxy from the client side REST API to that of the origin server.
+My first thought was that this at it's root is a transformation proxy, from the client side REST API to that of the origin server.
 
 With that in mind I designed those two sides to be as decoupled as possible, so that any changes to the origin data or client side requirements could be made without having to refactor the whole code base.
 
@@ -14,16 +41,10 @@ With that in mind I designed those two sides to be as decoupled as possible, so 
 
 Response message not provided by the origin server are in the l10n folder, this is to keep them out of the req/res flow and have them in a centralised place in case of a need to edit or translate.
 
-## Scripts
+## Thoughts on this Assesment
 
-###### Run the app
+I've recently been using TypeScript rather than JS so used JSdoc to introduce types and apply them to functions where possible. 
 
-`npm start`
+The `GET /policy/:id` wasn't totally clear to me from [the spec](https://dare-nodejs-assessment.herokuapp.com/assessment-swagger/static/index.html#/policies/findByIdPolicies), I have assumed that this is effectively get a policy by it's id. If this was intended to be by clientId it could be simply changed as the service is already in place if needed.
 
-###### Test the app
-
-`npm test`
-
-###### Lint the code
-
-`npm run lint`
+All in all I enjoyed working on this and thanks for the opportunity.
